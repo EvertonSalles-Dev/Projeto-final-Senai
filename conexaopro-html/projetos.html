@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConexãoPro - Projetos</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .page-header { background:#fff; border-radius:8px; box-shadow:0 1px 2px rgba(0,0,0,.1); padding:16px 20px; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+    .page-header h1 { font-size:22px; font-weight:700; color:#1877f2; margin:0; }
+    .page-header a { padding:8px 16px; background:#1877f2; color:#fff; border-radius:6px; font-size:14px; font-weight:600; text-decoration:none; }
+    .page-header a:hover { background:#166fe5; }
+    .projetos-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .projeto-card { background:#fff; border-radius:8px; box-shadow:0 1px 2px rgba(0,0,0,.1); padding:24px; transition:box-shadow .2s,transform .2s; border-left:4px solid #42b72a; }
+    .projeto-card:hover { box-shadow:0 4px 12px rgba(0,0,0,.15); transform:translateY(-2px); }
+    .projeto-icon { font-size:40px; margin-bottom:12px; }
+    .projeto-card h3 { font-size:18px; font-weight:600; color:#1c1e21; margin-bottom:8px; }
+    .projeto-card p { font-size:14px; color:#606770; line-height:1.5; margin-bottom:12px; }
+    .projeto-footer { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+    .projeto-tag { display:inline-block; padding:4px 12px; background:#e8f5e9; color:#2e7d32; border-radius:4px; font-size:13px; font-weight:500; }
+    .projeto-tag-integrantes { display:inline-block; padding:4px 12px; background:#fff3e0; color:#e65100; border-radius:4px; font-size:13px; font-weight:500; }
+    .banner-projetos { background:linear-gradient(135deg,#42b72a,#1877f2); border-radius:8px; padding:32px; color:#fff; margin-bottom:16px; text-align:center; }
+    .banner-projetos h2 { font-size:26px; font-weight:700; margin-bottom:4px; }
+    .banner-projetos p { font-size:15px; opacity:.9; }
+    .btn-novo-projeto { display:inline-block; padding:10px 24px; background:#fff; color:#42b72a; border-radius:6px; font-weight:600; font-size:14px; text-decoration:none; margin-top:12px; transition:opacity .2s; }
+    .btn-novo-projeto:hover { opacity:.9; }
+    @media(max-width:768px){ .projetos-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div class="feed-page">
+    <header class="feed-header">
+      <div class="header-inner">
+        <div class="header-logo"><img src="assets/logo.png" alt="ConexãoPro" class="logo-img" /></div>
+        <div class="header-actions">
+          <div class="header-user-info"><p id="userNome" class="header-user-name"></p><p id="userCargo" class="header-user-cargo"></p></div>
+          <div id="avatarInicial" class="header-avatar" title="Meu perfil"></div>
+          <button id="sairBtn" class="btn-sair">Sair</button>
+        </div>
+    </header>
+    <div style="max-width:900px;margin:76px auto 20px;padding:0 16px;">
+      <div class="page-header">
+        <h1>📁 Projetos dos Alunos</h1>
+        <a href="feed.html">← Voltar ao Feed</a>
+      </div>
+      <div class="banner-projetos">
+        <h2>Compartilhe seus projetos com a comunidade</h2>
+        <p>Conheça os trabalhos desenvolvidos pelos alunos do SENAI Barreto</p>
+        <a href="feed.html" class="btn-novo-projeto">+ Compartilhe seu projeto no Feed</a>
+      </div>
+      <div id="projetosContainer" class="projetos-grid"></div>
+  </div>
+  <script src="js/database.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      var sessao = Database.auth.usuarioAtual();
+      if(!sessao){ window.location.href='index.html'; return; }
+      document.getElementById('userNome').textContent = sessao.nome;
+      document.getElementById('userCargo').textContent = sessao.cargo || 'aluno';
+      document.getElementById('avatarInicial').textContent = sessao.nome.charAt(0).toUpperCase();
+      var container = document.getElementById('projetosContainer');
+      var projetos = Database.projetosExemplo;
+      for(var i=0;i<projetos.length;i++){
+        var p = projetos[i];
+        var card = document.createElement('div');
+        card.className = 'projeto-card';
+        card.innerHTML = '<div class="projeto-icon">🚀</div><h3>'+escapeHtml(p.titulo)+'</h3><p>'+escapeHtml(p.descricao)+'</p><div class="projeto-footer"><span class="projeto-tag">🎓 '+escapeHtml(p.curso)+'</span><span class="projeto-tag-integrantes">👥 '+p.integrantes+' integrantes</span></div>';
+        container.appendChild(card);
+      }
+      document.getElementById('sairBtn').addEventListener('click',function(){ Database.auth.logout(); window.location.href='index.html'; });
+    });
+    function escapeHtml(t){ var d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+  </script>
+</body>
+</html>

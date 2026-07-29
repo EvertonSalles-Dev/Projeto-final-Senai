@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConexãoPro - Entrar</title>
+  <meta name="description" content="Rede social da comunidade SENAI" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="login-page">
+    <div class="login-container">
+      <!-- Coluna Esquerda - Marca -->
+      <div class="login-hero">
+        <div class="login-hero-logo">
+          <img src="assets/logo.png" alt="ConexãoPro" />
+        </div>
+        <p class="slogan">Conectando talentos do SENAI, construindo o futuro profissional.</p>
+      </div>
+
+      <!-- Coluna Direita - Formulário -->
+      <div class="login-card-wrapper">
+        <div class="login-card">
+          <form id="loginForm" class="login-form">
+            <div class="input-group">
+              <input
+                id="matricula"
+                name="matricula"
+                type="text"
+                inputmode="numeric"
+                placeholder="Número da matrícula"
+              />
+            </div>
+
+            <div class="input-group">
+              <input
+                id="senhaLogin"
+                name="senhaLogin"
+                type="password"
+                placeholder="Senha"
+              />
+            </div>
+
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+            <button id="loginBtn" type="submit" class="btn-login">
+              <span id="btnText">Entrar</span>
+            </button>
+
+            <a href="#" class="forgot-password">Esqueceu a senha?</a>
+
+            <div class="login-divider"></div>
+
+            <a href="cadastro.html" class="btn-create-account">Criar nova conta</a>
+          </form>
+        </div>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="js/database.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

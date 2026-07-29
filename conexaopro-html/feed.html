@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConexãoPro</title>
+  <meta name="description" content="Rede social da comunidade SENAI" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Tela de Carregamento -->
+  <div id="loadingScreen" class="loading-screen">
+    <p>Carregando...</p>
+  </div>
+
+  <!-- Feed Container (inicialmente oculto) -->
+  <div id="feedContainer" class="feed-page" style="display: none;">
+
+    <!-- Header fixo igual Facebook -->
+    <header class="feed-header">
+      <div class="header-inner">
+        <div class="header-logo">
+          <img src="assets/logo.png" alt="ConexãoPro" class="logo-img" />
+        </div>
+        <div class="header-search">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Pesquisar no ConexãoPro" class="search-input" />
+        </div>
+        <div class="header-actions">
+          <div class="header-user-info">
+            <p id="userNome" class="header-user-name"></p>
+            <p id="userCargo" class="header-user-cargo"></p>
+          </div>
+          <div id="avatarInicial" class="header-avatar" title="Meu perfil"></div>
+          <button id="sairBtn" class="btn-sair">Sair</button>
+        </div>
+    </header>
+
+    <!-- Grid Principal - 3 colunas estilo Facebook -->
+    <div class="feed-grid">
+
+      <!-- Sidebar Esquerda -->
+      <aside class="sidebar sidebar-left-panel">
+        <div class="sidebar-card">
+          <div class="profile-mini">
+            <div id="sideAvatar" class="side-avatar"></div>
+            <div>
+              <p id="sideNome" class="side-nome"></p>
+              <p id="sideCargo" class="side-cargo"></p>
+            </div>
+          <nav class="nav-menu" id="navMenu">
+            <button class="nav-btn active" data-tab="feed"><span>🏠</span> Feed</button>
+            <button class="nav-btn" data-tab="perfil"><span>👤</span> Meu perfil</button>
+            <button class="nav-btn" data-tab="cursos"><span>🎓</span> Cursos</button>
+            <button class="nav-btn" data-tab="projetos"><span>📁</span> Projetos</button>
+            <button class="nav-btn" data-tab="vagas"><span>💼</span> Vagas</button>
+            <button class="nav-btn" id="adminNavBtn" style="display:none;" onclick="window.location.href='admin.html'"><span>⚙️</span> Admin</button>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Conteúdo Principal -->
+      <section class="feed-content" id="mainContent">
+
+        <!-- ===== ABA FEED ===== -->
+        <div id="tab-feed" class="tab-content active-tab">
+          <div class="publish-card">
+            <div class="publish-area">
+              <div id="publishAvatar" class="publish-avatar"></div>
+              <div class="publish-input-area">
+                <textarea id="postTextarea" placeholder="No que você está pensando?" rows="2" class="publish-textarea"></textarea>
+                <div id="publishError" class="publish-error" style="display: none;"></div>
+                <div class="publish-actions-bar">
+                  <button id="publishBtn" class="btn-publicar">Publicar</button>
+                  <div class="publish-icons">
+                    <span>📷</span>
+                    <span>🎥</span>
+                    <span>📎</span>
+                    <span>😊</span>
+                  </div>
+              </div>
+          </div>
+          <div id="postsContainer" class="posts-feed">
+            <div class="empty-feed">Nenhuma publicação ainda. Seja o primeiro!</div>
+        </div>
+
+        <!-- ===== ABA PERFIL ===== -->
+        <div id="tab-perfil" class="tab-content">
+          <div class="profile-card">
+            <div class="profile-cover"></div>
+            <div class="profile-info">
+              <div id="perfilAvatar" class="perfil-avatar-large"></div>
+              <h2 id="perfilNome"></h2>
+              <p id="perfilCargo"></p>
+              <p id="perfilMatricula" class="perfil-detail"></p>
+              <div class="perfil-stats">
+                <div class="stat-item"><strong id="perfilPostsCount">0</strong> <span>publicações</span></div>
+                <div class="stat-item"><strong>0</strong> <span>amigos</span></div>
+                <div class="stat-item"><strong>0</strong> <span>curtidas</span></div>
+            </div>
+            <div class="profile-bio">
+              <h3>Sobre</h3>
+              <p id="perfilBio">Aluno dedicado do SENAI Barreto, sempre em busca de novos conhecimentos e desafios.</p>
+            </div>
+            <div class="profile-posts" id="perfilPosts">
+              <h3>Minhas Publicações</h3>
+              <div class="empty-feed">Você ainda não publicou nada.</div>
+          </div>
+
+        <!-- ===== ABA CURSOS ===== -->
+        <div id="tab-cursos" class="tab-content">
+          <div class="section-header">
+            <h2>🎓 Cursos Disponíveis</h2>
+            <p>Conheça os cursos oferecidos pelo SENAI Barreto</p>
+          </div>
+          <div id="cursosContainer" class="card-grid"></div>
+
+        <!-- ===== ABA PROJETOS ===== -->
+        <div id="tab-projetos" class="tab-content">
+          <div class="section-header">
+            <h2>📁 Projetos dos Alunos</h2>
+            <p>Conheça os projetos desenvolvidos pela comunidade</p>
+          </div>
+          <div id="projetosContainer" class="card-grid"></div>
+
+        <!-- ===== ABA VAGAS ===== -->
+        <div id="tab-vagas" class="tab-content">
+          <div class="section-header">
+            <h2>💼 Vagas e Oportunidades</h2>
+            <p>Encontre estágios, aprendizados e empregos</p>
+          </div>
+          <div id="vagasContainer" class="card-grid"></div>
+
+      </section>
+
+      <!-- Sidebar Direita -->
+      <aside class="sidebar-right sidebar-right-panel">
+        <div class="sidebar-card">
+          <h2>Destaques</h2>
+          <div class="highlights">
+            <div class="highlight-card clickable" data-tab="cursos">
+              <p class="highlight-card-title blue">🎓 Cursos</p>
+              <p id="cursosCount">Carregando...</p>
+            </div>
+            <div class="highlight-card clickable" data-tab="projetos">
+              <p class="highlight-card-title green">📁 Projetos</p>
+              <p id="projetosCount">Carregando...</p>
+            </div>
+            <div class="highlight-card clickable" data-tab="vagas">
+              <p class="highlight-card-title amber">💼 Vagas</p>
+              <p id="vagasCount">Carregando...</p>
+            </div>
+        </div>
+        <div class="sidebar-card">
+          <h2>Últimos Alunos</h2>
+          <div id="ultimosAlunos" class="alunos-list">
+            <p class="text-muted">Carregando...</p>
+          </div>
+      </aside>
+
+    </div><!-- /feed-grid -->
+  </div><!-- /feedContainer -->
+
+  <script src="js/database.js"></script>
+  <script src="js/feed.js"></script>
+</body>
+</html>

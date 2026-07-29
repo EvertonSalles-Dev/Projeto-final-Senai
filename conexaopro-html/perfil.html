@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConexãoPro - Meu Perfil</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .page-header { background:#fff; border-radius:8px; box-shadow:0 1px 2px rgba(0,0,0,.1); padding:16px 20px; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; }
+    .page-header h1 { font-size:22px; font-weight:700; color:#1877f2; margin:0; }
+    .page-header a { padding:8px 16px; background:#1877f2; color:#fff; border-radius:6px; font-size:14px; font-weight:600; text-decoration:none; }
+    .page-header a:hover { background:#166fe5; }
+    .profile-card { background:#fff; border-radius:8px; box-shadow:0 1px 2px rgba(0,0,0,.1); overflow:hidden; }
+    .profile-cover { height:250px; background:linear-gradient(135deg,#1877f2,#42b72a); }
+    .profile-info-wrap { text-align:center; padding:0 24px 24px; margin-top:-50px; }
+    .perfil-avatar-large { width:100px; height:100px; border-radius:50%; background:#1877f2; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:40px; margin:0 auto 16px; border:4px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,.15); }
+    .profile-info-wrap h2 { font-size:28px; font-weight:700; color:#1c1e21; margin-bottom:4px; }
+    .profile-info-wrap p { font-size:15px; color:#606770; margin-bottom:2px; }
+    .perfil-detail { font-size:14px !important; color:#90949c !important; margin-top:4px !important; }
+    .perfil-stats { display:flex; justify-content:center; gap:48px; margin-top:20px; padding:16px 0; border-top:1px solid #dadde1; border-bottom:1px solid #dadde1; max-width:500px; margin-left:auto; margin-right:auto; }
+    .stat-item { text-align:center; }
+    .stat-item strong { display:block; font-size:20px; color:#1c1e21; }
+    .stat-item span { font-size:14px; color:#606770; }
+    .profile-bio-section { padding:24px; }
+    .profile-bio-section h3 { font-size:18px; font-weight:600; margin-bottom:8px; color:#1c1e21; }
+    .profile-bio-section p { font-size:15px; color:#606770; line-height:1.6; }
+    .profile-posts-section { padding:24px; border-top:1px solid #dadde1; }
+    .profile-posts-section h3 { font-size:18px; font-weight:600; margin-bottom:16px; color:#1c1e21; }
+    .perfil-post-item { padding:16px; background:#f0f2f5; border-radius:8px; margin-bottom:12px; }
+    .perfil-post-content { font-size:15px; color:#1c1e21; margin-bottom:6px; line-height:1.5; }
+    .perfil-post-meta { font-size:13px; color:#90949c; }
+    @media(max-width:768px){ .perfil-stats { gap:24px; } }
+  </style>
+</head>
+<body>
+  <div class="feed-page">
+    <header class="feed-header">
+      <div class="header-inner">
+        <div class="header-logo"><img src="assets/logo.png" alt="ConexãoPro" class="logo-img" /></div>
+        <div class="header-actions">
+          <div class="header-user-info"><p id="userNome" class="header-user-name"></p><p id="userCargo" class="header-user-cargo"></p></div>
+          <div id="avatarInicial" class="header-avatar" title="Meu perfil"></div>
+          <button id="sairBtn" class="btn-sair">Sair</button>
+        </div>
+    </header>
+    <div style="max-width:800px;margin:76px auto 20px;padding:0 16px;">
+      <div class="page-header">
+        <h1>👤 Meu Perfil</h1>
+        <a href="feed.html">← Voltar ao Feed</a>
+      </div>
+      <div class="profile-card">
+        <div class="profile-cover"></div>
+        <div class="profile-info-wrap">
+          <div id="perfilAvatar" class="perfil-avatar-large"></div>
+          <h2 id="perfilNome"></h2>
+          <p id="perfilCargo"></p>
+          <p id="perfilMatricula" class="perfil-detail"></p>
+          <div class="perfil-stats">
+            <div class="stat-item"><strong id="perfilPostsCount">0</strong><span>publicações</span></div>
+            <div class="stat-item"><strong>0</strong><span>amigos</span></div>
+            <div class="stat-item"><strong id="perfilCurtidasCount">0</strong><span>curtidas</span></div>
+        </div>
+        <div class="profile-bio-section">
+          <h3>Sobre</h3>
+          <p id="perfilBio">Aluno dedicado do SENAI Barreto, sempre em busca de novos conhecimentos e desafios.</p>
+        </div>
+        <div class="profile-posts-section" id="perfilPosts">
+          <h3>Minhas Publicações</h3>
+          <div class="empty-feed">Você ainda não publicou nada.</div>
+      </div>
+  </div>
+  <script src="js/database.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      var sessao = Database.auth.usuarioAtual();
+      if(!sessao){ window.location.href='index.html'; return; }
+      document.getElementById('userNome').textContent = sessao.nome;
+      document.getElementById('userCargo').textContent = sessao.cargo || 'aluno';
+      document.getElementById('avatarInicial').textContent = sessao.nome.charAt(0).toUpperCase();
+      document.getElementById('perfilAvatar').textContent = sessao.nome.charAt(0).toUpperCase();
+      document.getElementById('perfilNome').textContent = sessao.nome;
+      document.getElementById('perfilCargo').textContent = sessao.cargo || 'aluno';
+      document.getElementById('perfilMatricula').textContent = 'Matrícula: ' + (sessao.matricula || '');
+      var todosPosts = Database.posts.listar();
+      var meusPosts = [];
+      var totalCurtidas = 0;
+      for(var i=0;i<todosPosts.length;i++){
+        if(todosPosts[i].userId === sessao.userId){ meusPosts.push(todosPosts[i]); totalCurtidas += (todosPosts[i].curtidas||0); }
+      }
+      document.getElementById('perfilPostsCount').textContent = meusPosts.length;
+      document.getElementById('perfilCurtidasCount').textContent = totalCurtidas;
+      var container = document.getElementById('perfilPosts');
+      if(meusPosts.length===0){
+        container.innerHTML = '<h3>Minhas Publicações</h3><div class="empty-feed">Você ainda não publicou nada.</div>';
+      } else {
+        var html = '<h3>Minhas Publicações ('+meusPosts.length+')</h3>';
+        for(var i=0;i<meusPosts.length;i++){
+          var p=meusPosts[i];
+          var d=new Date(p.criadoEm);
+          var dataFormatada = d.toLocaleDateString('pt-BR',{dateStyle:'short',timeStyle:'short'});
+          html += '<div class="perfil-post-item"><div class="perfil-post-content">'+escapeHtml(p.conteudo)+'</div><div class="perfil-post-meta">'+dataFormatada+' · 👍 '+(p.curtidas||0)+'</div>';
+        }
+        container.innerHTML = html;
+      }
+      document.getElementById('sairBtn').addEventListener('click',function(){ Database.auth.logout(); window.location.href='index.html'; });
+    });
+    function escapeHtml(t){ var d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+  </script>
+</body>
+</html>

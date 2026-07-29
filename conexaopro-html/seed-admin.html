@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seed - Admin ConexãoPro</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #0a0a23; color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
+    .container { background: #16163a; padding: 40px; border-radius: 12px; max-width: 500px; text-align: center; }
+    h1 { color: #1877f2; margin-bottom: 8px; }
+    .card { background: #1e1e4a; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: left; }
+    .card p { margin: 6px 0; font-size: 14px; color: #ccc; }
+    .card strong { color: #fff; }
+    .btn { padding: 14px 28px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: .2s; margin: 6px; }
+    .btn-primary { background: #1877f2; color: #fff; }
+    .btn-success { background: #42b72a; color: #fff; }
+    .btn:hover { opacity: .9; transform: scale(1.02); }
+    .msg { padding: 12px; border-radius: 6px; margin: 12px 0; font-size: 14px; }
+    .msg.success { background: #1b5e20; color: #a5d6a7; }
+    .msg.error { background: #b71c1c; color: #ffcdd2; }
+    .hidden { display: none; }
+    a { color: #1877f2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚙️ Seed - Admin</h1>
+    <p style="color:#888;">Configure o usuário administrador</p>
+
+    <div class="card">
+      <p><strong>👤 Nome:</strong> Administrador SENAI</p>
+      <p><strong>🔢 Matrícula:</strong> admin001</p>
+      <p><strong>🔑 Senha:</strong> admin123</p>
+      <p><strong>👑 Cargo:</strong> admin</p>
+    </div>
+
+    <button id="criarAdminBtn" class="btn btn-primary">👑 Criar Administrador</button>
+    <br/>
+    <a href="index.html" class="btn btn-success" style="display:inline-block;margin-top:10px;">Ir para Login</a>
+    <a href="admin.html" class="btn btn-success" style="display:inline-block;">Ir para Admin</a>
+
+    <div id="mensagem" class="msg hidden"></div>
+
+  <script src="js/database.js"></script>
+  <script>
+    document.getElementById('criarAdminBtn').addEventListener('click', function () {
+      var msg = document.getElementById('mensagem');
+
+      // Verificar se já existe
+      var existente = Database.usuarios.buscarPorMatricula('admin001');
+      if (existente) {
+        msg.className = 'msg error';
+        msg.textContent = '⚠️ Administrador já existe! Use matrícula admin001, senha admin123 para logar.';
+        msg.classList.remove('hidden');
+        return;
+      }
+
+      // Criar admin
+      var usuarios = Database.usuarios.listar();
+      var admin = {
+        id: Database._gerarId(),
+        nome: 'Administrador SENAI',
+        matricula: 'admin001',
+        dataNascimento: '2000-01-01',
+        cargo: 'admin',
+        senha: 'admin123',
+        criadoEm: Database._agora(),
+      };
+      usuarios.push(admin);
+      Database._salvar('usuarios', usuarios);
+
+      msg.className = 'msg success';
+      msg.textContent = '✅ Administrador criado com sucesso! Use matrícula: admin001, senha: admin123';
+      msg.classList.remove('hidden');
+
+      this.textContent = '✅ Admin Criado!';
+      this.disabled = true;
+    });
+  </script>
+</body>
+</html>
+</｜｜DSML｜｜parameter>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConexãoPro - Painel Administrativo</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Layout Admin */
+    .admin-page { min-height: 100vh; background: #f0f2f5; }
+    .admin-container { max-width: 1100px; margin: 76px auto 20px; padding: 0 16px; }
+
+    .admin-header-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.1); padding: 20px 24px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .admin-header-card h1 { font-size: 24px; font-weight: 700; color: #1c1e21; margin: 0; }
+    .admin-header-card h1 span { color: #1877f2; }
+    .admin-header-card p { font-size: 14px; color: #606770; margin: 4px 0 0; }
+    .admin-header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .btn-admin { padding: 8px 20px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .2s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-admin-primary { background: #1877f2; color: #fff; }
+    .btn-admin-primary:hover { background: #166fe5; }
+    .btn-admin-success { background: #42b72a; color: #fff; }
+    .btn-admin-success:hover { background: #36a420; }
+    .btn-admin-danger { background: #c62828; color: #fff; }
+    .btn-admin-danger:hover { background: #b71c1c; }
+    .btn-admin-outline { background: transparent; border: 1px solid #dadde1; color: #606770; }
+    .btn-admin-outline:hover { background: #f0f2f5; }
+
+    /* Estatísticas */
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 16px; }
+    .stat-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.1); padding: 20px; text-align: center; transition: transform .2s; }
+    .stat-card:hover { transform: translateY(-2px); }
+    .stat-card .stat-number { font-size: 32px; font-weight: 700; color: #1877f2; }
+    .stat-card .stat-label { font-size: 14px; color: #606770; margin-top: 4px; }
+    .stat-card:nth-child(2) .stat-number { color: #42b72a; }
+    .stat-card:nth-child(3) .stat-number { color: #f59e0b; }
+
+    /* Abas de gerenciamento */
+    .admin-tabs { display: flex; gap: 4px; margin-bottom: 16px; background: #fff; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.1); padding: 4px; }
+    .admin-tab-btn { flex: 1; padding: 12px 16px; border: none; background: transparent; border-radius: 6px; font-size: 14px; font-weight: 600; color: #606770; cursor: pointer; transition: all .2s; }
+    .admin-tab-btn:hover { background: #f0f2f5; }
+    .admin-tab-btn.active { background: #1877f2; color: #fff; }
+
+    .admin-tab-content { display: none; }
+    .admin-tab-content.active { display: block; }
+
+    /* Formulário */
+    .admin-form { background: #fff; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.1); padding: 24px; margin-bottom: 16px; }
+    .admin-form h3 { font-size: 18px; font-weight: 600; color: #1c1e21; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #dadde1; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .admin-form .form-group { margin-bottom: 12px; }
+    .admin-form .form-group label { display: block; font-size: 13px; font-weight: 500; color: #606770; margin-bottom: 4px; }
+    .admin-form .form-group input,
+    .admin-form .form-group select,
+    .admin-form .form-group textarea { width: 100%; padding: 10px 12px; border: 1px solid #dddfe2; border-radius: 6px; font-size: 14px; outline: none; transition: border-color .2s; font-family: inherit; color: #1c1e21; }
+    .admin-form .form-group input:focus,
+    .admin-form .form-group select:focus,
+    .admin-form .form-group textarea:focus { border-color: #1877f2; box-shadow: 0 0 0 2px rgba(24,119,242,.2); }
+    .admin-form .form-group textarea { resize: vertical; min-height: 80px; }
+
+    .btn-submit { padding: 10px 24px; background: #42b72a; color: #fff; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background .2s; }
+    .btn-submit:hover { background: #36a420; }
+
+    /* Lista de itens */
+    .admin-list { background: #fff; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.1); padding: 16px; }
+    .admin-list h3 { font-size: 16px; font-weight: 600; color: #1c1e21; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #dadde1; }
+
+    .admin-item { display: flex; align-items: flex-start; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #f0f2f5; gap: 12px; }
+    .admin-item:last-child { border-bottom: none; }
+    .admin-item-info { flex: 1; }
+    .admin-item-info h4 { font-size: 15px; font-weight: 600; color: #1c1e21; margin-bottom: 2px; }
+    .admin-item-info p { font-size: 13px; color: #606770; line-height: 1.4; }
+    .admin-item-info .item-tags { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 4px; }
+    .admin-item-info .item-tag { display: inline-block; padding: 2px 8px; background: #e7f3ff; color: #1877f2; border-radius: 4px; font-size: 11px; font-weight: 500; }
+    .admin-item-actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+    .btn-sm { padding: 6px 12px; font-size: 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; transition: all .2s; }
+    .btn-sm-edit { background: #e7f3ff; color: #1877f2; }
+    .btn-sm-edit:hover { background: #d0e4ff; }
+    .btn-sm-delete { background: #ffebee; color: #c62828; }
+    .btn-sm-delete:hover { background: #ffcdd2; }
+
+    .empty-list { text-align: center; padding: 40px; color: #90949c; font-size: 14px; }
+
+    /* Sucesso/erro */
+    .admin-msg { padding: 10px 14px; border-radius: 6px; font-size: 13px; margin-bottom: 12px; display: none; }
+    .admin-msg.success { background: #e8f5e9; color: #2e7d32; display: block; }
+    .admin-msg.error { background: #ffebee; color: #c62828; display: block; }
+
+    /* Usuários */
+    .user-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid #f0f2f5; }
+    .user-item:last-child { border-bottom: none; }
+    .user-item-info { display: flex; align-items: center; gap: 12px; }
+    .user-avatar-sm { width: 36px; height: 36px; border-radius: 50%; background: #1877f2; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+    .user-item-name { font-size: 14px; font-weight: 500; color: #1c1e21; }
+    .user-item-cargo { font-size: 12px; color: #606770; text-transform: capitalize; }
+    .user-item-cargo.admin-badge { color: #1877f2; font-weight: 600; }
+
+    @media(max-width:768px){
+      .stats-grid { grid-template-columns: 1fr; }
+      .form-row, .form-row-3 { grid-template-columns: 1fr; }
+      .admin-tabs { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-page">
+    <header class="feed-header">
+      <div class="header-inner">
+        <div class="header-logo"><img src="assets/logo.png" alt="ConexãoPro" class="logo-img" /></div>
+        <div class="header-actions">
+          <div class="header-user-info">
+            <p id="userNome" class="header-user-name"></p>
+            <p id="userCargo" class="header-user-cargo"></p>
+          </div>
+          <div id="avatarInicial" class="header-avatar"></div>
+          <a href="feed.html" class="btn-sair" style="border-color:#1877f2;color:#1877f2;">Feed</a>
+          <button id="sairBtn" class="btn-sair">Sair</button>
+        </div>
+    </header>
+
+    <div class="admin-container">
+      <!-- Header Admin -->
+      <div class="admin-header-card">
+        <div>
+          <h1>⚙️ Painel <span>Administrativo</span></h1>
+          <p>Gerencie cursos, projetos e vagas do ConexãoPro</p>
+        </div>
+        <div class="admin-header-actions">
+          <a href="cursos.html" class="btn-admin btn-admin-outline">🎓 Cursos</a>
+          <a href="projetos.html" class="btn-admin btn-admin-outline">📁 Projetos</a>
+          <a href="vagas.html" class="btn-admin btn-admin-outline">💼 Vagas</a>
+        </div>
+
+      <!-- Estatísticas -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number" id="totalCursos">0</div>
+          <div class="stat-label">🎓 Cursos</div>
+        <div class="stat-card">
+          <div class="stat-number" id="totalProjetos">0</div>
+          <div class="stat-label">📁 Projetos</div>
+        <div class="stat-card">
+          <div class="stat-number" id="totalVagas">0</div>
+          <div class="stat-label">💼 Vagas</div>
+      </div>
+
+      <!-- Abas -->
+      <div class="admin-tabs">
+        <button class="admin-tab-btn active" data-tab="cursos">🎓 Cursos</button>
+        <button class="admin-tab-btn" data-tab="projetos">📁 Projetos</button>
+        <button class="admin-tab-btn" data-tab="vagas">💼 Vagas</button>
+        <button class="admin-tab-btn" data-tab="usuarios">👥 Usuários</button>
+      </div>
+
+      <!-- ===== ABA CURSOS ===== -->
+      <div id="admin-tab-cursos" class="admin-tab-content active">
+        <div class="admin-form">
+          <h3>➕ Adicionar Novo Curso</h3>
+          <div id="msgCurso" class="admin-msg"></div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cursoNome">Nome do curso</label>
+              <input id="cursoNome" type="text" placeholder="Ex: Desenvolvimento de Sistemas" />
+            </div>
+            <div class="form-group">
+              <label for="cursoDuracao">Duração</label>
+              <input id="cursoDuracao" type="text" placeholder="Ex: 2 anos, 18 meses" />
+            </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cursoIcone">Ícone (emoji)</label>
+              <input id="cursoIcone" type="text" placeholder="Ex: 💻, ⚙️, 🔌" value="📚" />
+            </div>
+            <div class="form-group">
+              <label for="cursoDescricao">Descrição</label>
+              <textarea id="cursoDescricao" placeholder="Descrição do curso..."></textarea>
+            </div>
+          <button id="btnAddCurso" class="btn-submit">➕ Adicionar Curso</button>
+        </div>
+
+        <div class="admin-list">
+          <h3>📋 Cursos Cadastrados</h3>
+          <div id="listaCursos"></div>
+      </div>
+
+      <!-- ===== ABA PROJETOS ===== -->
+      <div id="admin-tab-projetos" class="admin-tab-content">
+        <div class="admin-form">
+          <h3>➕ Adicionar Novo Projeto</h3>
+          <div id="msgProjeto" class="admin-msg"></div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="projetoTitulo">Título do projeto</label>
+              <input id="projetoTitulo" type="text" placeholder="Ex: App de Monitoramento" />
+            </div>
+            <div class="form-group">
+              <label for="projetoCurso">Curso relacionado</label>
+              <input id="projetoCurso" type="text" placeholder="Ex: Mecatrônica" />
+            </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="projetoIntegrantes">Número de integrantes</label>
+              <input id="projetoIntegrantes" type="number" placeholder="Ex: 4" min="1" value="1" />
+            </div>
+            <div class="form-group">
+              <label for="projetoDescricao">Descrição</label>
+              <textarea id="projetoDescricao" placeholder="Descrição do projeto..."></textarea>
+            </div>
+          <button id="btnAddProjeto" class="btn-submit">➕ Adicionar Projeto</button>
+        </div>
+
+        <div class="admin-list">
+          <h3>📋 Projetos Cadastrados</h3>
+          <div id="listaProjetos"></div>
+      </div>
+
+      <!-- ===== ABA VAGAS ===== -->
+      <div id="admin-tab-vagas" class="admin-tab-content">
+        <div class="admin-form">
+          <h3>➕ Adicionar Nova Vaga</h3>
+          <div id="msgVaga" class="admin-msg"></div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="vagaTitulo">Título da vaga</label>
+              <input id="vagaTitulo" type="text" placeholder="Ex: Estágio em Desenvolvimento" />
+            </div>
+            <div class="form-group">
+              <label for="vagaEmpresa">Empresa</label>
+              <input id="vagaEmpresa" type="text" placeholder="Nome da empresa" />
+            </div>
+          <div class="form-row-3">
+            <div class="form-group">
+              <label for="vagaLocal">Local</label>
+              <input id="vagaLocal" type="text" placeholder="Ex: São Paulo - SP" />
+            </div>
+            <div class="form-group">
+              <label for="vagaTipo">Tipo</label>
+              <select id="vagaTipo">
+                <option value="Estágio">Estágio</option>
+                <option value="Aprendiz">Aprendiz</option>
+                <option value="CLT">CLT</option>
+                <option value="PJ">PJ</option>
+                <option value="Temporário">Temporário</option>
+              </select>
+            </div>
+          <div class="form-group">
+            <label for="vagaDescricao">Descrição</label>
+            <textarea id="vagaDescricao" placeholder="Descrição da vaga, requisitos, benefícios..."></textarea>
+          </div>
+          <button id="btnAddVaga" class="btn-submit">➕ Adicionar Vaga</button>
+        </div>
+
+        <div class="admin-list">
+          <h3>📋 Vagas Cadastradas</h3>
+          <div id="listaVagas"></div>
+      </div>
+
+      <!-- ===== ABA USUÁRIOS ===== -->
+      <div id="admin-tab-usuarios" class="admin-tab-content">
+        <div class="admin-form">
+          <h3>👥 Gerenciar Usuários</h3>
+          <div id="msgUsuario" class="admin-msg"></div>
+          <p style="font-size:14px;color:#606770;margin-bottom:12px;">Você pode promover um usuário a <strong>Administrador</strong> para dar acesso a este painel.</p>
+          <div id="listaUsuarios"></div>
+      </div>
+  </div>
+
+  <script src="js/database.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
